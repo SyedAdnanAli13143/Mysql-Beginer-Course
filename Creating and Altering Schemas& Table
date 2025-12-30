@@ -1,0 +1,136 @@
+CREATE DATABASE my_db;
+# creates a new database named my_db.
+CREATE SCHEMA my_db;
+# does exactly the same thing as CREATE DATABASE my_db;.
+# MySQL treats SCHEMA as a synonym for DATABASE.
+CREATE DATABASE IF NOT EXISTS company_db
+
+SHOW DATABASES;
+
+USE my_company;
+
+# Now create a simple employees table:
+
+CREATE TABLE employees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(20),
+    hire_date DATE,
+    salary DECIMAL(10, 2),
+    department VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE departments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    department_name VARCHAR(50) UNIQUE NOT NULL,
+    budget DECIMAL(12, 2)
+);
+
+-- Now update the employees table to reference departments
+ALTER TABLE employees
+ADD COLUMN department_id INT
+
+
+-- List all tables in the current database
+SHOW TABLES;
+
+-- Describe the structure of a table
+DESCRIBE employees;
+-- or
+DESC departments;
+
+
+
+Common MySQL Data Types
+Numeric
+
+TINYINT      : 1 byte (-128 to 127)
+SMALLINT     : 2 bytes
+INT          : 4 bytes (standard ID)
+BIGINT       : 8 bytes
+DECIMAL(10,2): Exact decimal (money)
+FLOAT / DOUBLE: Approximate floating point
+
+String
+
+CHAR(n)      : Fixed length (e.g., CHAR(2) for country code)
+VARCHAR(n)   : Variable length (most common)
+TEXT         : Large text (up to 65KB)
+MEDIUMTEXT   : Up to 16MB
+LONGTEXT     : Up to 4GB
+
+Date & Time
+
+DATE         : '2025-12-30'
+TIME         : '14:30:00'
+DATETIME     : '2025-12-30 14:30:00'
+TIMESTAMP    : Good for logging (timezone aware)
+YEAR         : 2025
+
+Other
+
+BOOLEAN      : Actually TINYINT(1) → 0 or 1
+ENUM('val1','val2') : Restricted list
+JSON         : Store JSON data
+
+
+Adding and Removing Columns (with SQL)
+
+-- Add a new column
+ALTER TABLE employees
+ADD COLUMN middle_name VARCHAR(50);
+
+-- Add multiple columns
+ALTER TABLE employees
+ADD COLUMN is_manager TINYINT(1) DEFAULT 0,
+ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+-- Modify column (change type)
+ALTER TABLE employees
+MODIFY COLUMN phone VARCHAR(30);
+
+-- Remove a column
+ALTER TABLE employees
+DROP COLUMN middle_name;
+
+-- Remove multiple columns (MySQL 8.0+)
+ALTER TABLE employees
+DROP COLUMN is_manager,
+DROP COLUMN updated_at;
+
+
+Dropping Tables and Databases
+-- Drop a table (deletes table and all data!)
+DROP TABLE employees;
+
+-- Drop table only if it exists
+DROP TABLE IF EXISTS employees;
+
+-- Drop entire database (deletes everything inside!)
+DROP DATABASE company_db;
+
+-- Safe version
+DROP DATABASE IF EXISTS company_db;
+
+SHOW DATABASES;           -- List databases
+SHOW TABLES;              -- List tables in current DB
+DESCRIBE table_name;      -- Show table structure
+DESC table_name;          -- Shortcut for DESCRIBE
+
+INSERT INTO employees (first_name, last_name, email) 
+VALUES ('John', 'Doe', 'john@example.com');
+
+SELECT * FROM employees;
+
+UPDATE employees SET salary = 80000 WHERE id = 1;
+
+DELETE FROM employees WHERE id = 1;
+
+
+
+
+
